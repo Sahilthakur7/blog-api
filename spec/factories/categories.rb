@@ -1,5 +1,5 @@
-FactoryBot.defne do
+FactoryBot.define do
     factory :category do
-        title { Faker::Lorem.word}
+        title { Faker::GameOfThrones.character}
     end
 end

@@ -49,7 +49,7 @@ RSpec.describe 'Articles API', type: :request do
 
     describe 'POST /articles' do
         let(:category) { create(:category) }
-        let(:valid_attributes) { {title: 'Animal Farm',content: 'lsdkfj'}}
+        let(:valid_attributes) { {title: 'Animal Farm',content: 'lsdkfj',category_id: category.id}}
 
         context 'when the request is valid' do
             before { post '/articles', params: valid_attributes}

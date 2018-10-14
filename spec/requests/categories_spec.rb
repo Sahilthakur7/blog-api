@@ -36,7 +36,7 @@ RSpec.describe 'Categories API', type: :request do
             let(:category_id) { 340}
 
             it 'returns the status code 404' do
-                expect(response).to have_http_status(400)
+                expect(response).to have_http_status(404)
             end
 
             it 'returns a not found message' do

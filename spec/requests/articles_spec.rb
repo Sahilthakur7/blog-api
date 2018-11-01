@@ -1,13 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe 'Articles API', type: :request do
+    let(:user) {create(:user)}
     let!(:category) {create(:category)}
     let!(:articles) { create_list(:article, 10, category_id: category.id) }
     let(:article_id) { articles.first.id }
+    let(:headers) { valid_headers }
 
 
     describe 'GET /articles' do
-        before { get '/articles'}
+        before { get '/articles', params: {}, headers: headers}
 
         it 'returns articles' do
             expect(json).not_to be_empty
@@ -21,7 +23,7 @@ RSpec.describe 'Articles API', type: :request do
 
 
     describe 'GET /articles/:id' do
-        before { get "/articles/#{article_id}"}
+        before { get "/articles/#{article_id}",params: {}, headers: headers}
 
         context 'when the article exists' do
             it 'returns the article' do
@@ -49,10 +51,10 @@ RSpec.describe 'Articles API', type: :request do
 
     describe 'POST /articles' do
         let(:category) { create(:category) }
-        let(:valid_attributes) { {title: 'Animal Farm',content: 'lsdkfj',category_id: category.id}}
+        let(:valid_attributes) { {title: 'Animal Farm',content: 'lsdkfj',category_id: category.id}.to_json}
 
         context 'when the request is valid' do
-            before { post '/articles', params: valid_attributes}
+            before { post '/articles', params: valid_attributes,headers: headers}
 
             it 'creates an article' do
                 expect(json['title']).to eq('Animal Farm')
@@ -64,7 +66,7 @@ RSpec.describe 'Articles API', type: :request do
         end
 
         context 'when the request is invalid' do
-            before {post '/articles', params: {title: 'KV'}}
+            before {post '/articles', params: {},headers: headers}
 
             it 'return the status code 402' do
                 expect(response).to have_http_status(422)
@@ -77,10 +79,10 @@ RSpec.describe 'Articles API', type: :request do
     end
 
     describe 'PUT /articles/:id' do
-        let(:valid_attributes) { {title: '1984'}}
+        let(:valid_attributes) { {title: '1984'}.to_json}
 
         context 'when the article exists' do
-            before { put "/articles/#{article_id}", params: valid_attributes}
+            before { put "/articles/#{article_id}", params: valid_attributes,headers: headers}
 
             it 'updates the article' do
                 expect(response.body).to be_empty
@@ -93,7 +95,7 @@ RSpec.describe 'Articles API', type: :request do
     end
 
     describe 'DELETE /articles/:id' do
-        before { delete "/articles/#{article_id}"}
+        before { delete "/articles/#{article_id}" , params: {}, headers: headers}
 
         it 'returns status code 204' do
             expect(response).to have_http_status(204)
